@@ -1,0 +1,16 @@
+name: 'Sync README to Notion'
+description: 'A GitHub Action to sync README.md to a Notion page'
+author: 'Your Name'
+inputs:
+  notion_token:
+    description: 'Notion integration token'
+    required: true
+  notion_page_id:
+    description: 'Notion page ID'
+    required: true
+outputs:
+  success:
+    description: 'Indicates if the sync was successful'
+runs:
+  using: 'node12'
+  main: 'update-notion.js'
