@@ -4,6 +4,6 @@
     "description": "GitHub Action to sync README.md to a Notion page",
     "main": "update-notion.js",
     "dependencies": {
-      "@notionhq/client": "^1.0.0"
+      "@notionhq/client": "^2.3.0"
     }
   }
