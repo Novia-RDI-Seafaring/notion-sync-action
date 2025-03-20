@@ -12,5 +12,5 @@ outputs:
   success:
     description: 'Indicates if the sync was successful'
 runs:
-  using: 'node23'
+  using: 'node20'
   main: 'update-notion.js'
