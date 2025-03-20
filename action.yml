@@ -1,6 +1,6 @@
 name: 'Sync README to Notion'
 description: 'A GitHub Action to sync README.md to a Notion page'
-author: 'Your Name'
+author: 'Christian Möller'
 inputs:
   notion_token:
     description: 'Notion integration token'
