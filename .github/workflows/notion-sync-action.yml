@@ -16,14 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20' # Ensure this matches the version in action.yml
-
-      - name: Install dependencies
-        run: npm install
-
       - name: Run Notion Sync Action
         uses: ./ # Use the local action in the current repository
         with:

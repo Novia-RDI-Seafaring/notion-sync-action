@@ -12,6 +12,7 @@ outputs:
   success:
     description: 'Indicates if the sync was successful'
 runs:
+  using: 'composite'
   steps:
     - name: Set up Node.js
       uses: actions/setup-node@v4
