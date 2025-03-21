@@ -1,5 +1,6 @@
 const { Client } = require('@notionhq/client');
 const fs = require('fs');
+const { markdownToBlocks } = require('@tryfabric/martian');
 
 const notion = new Client({ auth: process.env.INPUT_NOTION_TOKEN });
 const pageId = process.env.INPUT_NOTION_PAGE_ID;
@@ -36,28 +37,12 @@ ${readmeContent}
       }
     });
 
-    // Split content into chunks of 2000 characters
-    const chunks = contentWithIndication.match(/.{1,2000}/gs) || [];
-
-    // Create text blocks for each chunk
-    const textBlocks = chunks.map(chunk => ({
-      object: "block",
-      type: "paragraph",
-      paragraph: {
-        rich_text: [
-          {
-            type: "text",
-            text: {
-              content: chunk
-            }
-          }
-        ]
-      }
-    }));
+    // Convert Markdown to Notion blocks
+    const notionBlocks = markdownToBlocks(contentWithIndication);
 
     await notion.blocks.children.append({
       block_id: pageId,
-      children: textBlocks
+      children: notionBlocks
     });
 
     console.log('Successfully updated Notion page');
