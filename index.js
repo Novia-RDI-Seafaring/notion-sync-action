@@ -6,57 +6,52 @@ const github = require('@actions/github');
 const notion = new Client({ auth: process.env.INPUT_NOTION_TOKEN });
 const pageId = process.env.INPUT_NOTION_PAGE_ID;
 
+// Extract GitHub metadata
+const { owner, repo } = github.context.repo;
+const branch = github.context.ref.replace('refs/heads/', ''); // Get branch name
+const repoDescription = process.env.INPUT_REPO_DESCRIPTION || 'No description provided';
+
+// Extract latest commit date from GitHub context
+const latestCommitDate = github.context.payload.head_commit
+  ? github.context.payload.head_commit.timestamp
+  : 'Unknown date';
+
 async function updatePage() {
   try {
     const readmeContent = fs.readFileSync('README.md', 'utf8');
+    const warningText = "This page's content is automatically copied from the connected GitHub repository.";
 
-    // Add indication text at the top
-    const warningText = "⚠️ This page's content is automatically copied from the connected GitHub repository.";
-
+    // Clear existing blocks
     const { results } = await notion.blocks.children.list({ block_id: pageId });
     for (const block of results) {
-      await notion.blocks.update({
-        block_id: block.id,
-        archived: true
-      });
+      await notion.blocks.update({ block_id: block.id, archived: true });
     }
 
-    // Get the repository name from the GitHub context
-    const repoName = github.context.repo.repo;
-
+    // Update Notion page title with repo name and branch
     await notion.pages.update({
       page_id: pageId,
       properties: {
-        title: {
-          title: [{ text: { content: repoName } }]
-        }
+        title: { title: [{ text: { content: `${repo} (${branch})` } }] },
+        Description: { rich_text: [{ text: { content: repoDescription } }] },
+        "Latest Commit Date": { date: { start: latestCommitDate } }
       }
     });
 
     // Convert Markdown to Notion blocks
     const notionBlocks = markdownToBlocks(readmeContent);
 
-    // Prepend the warning callout block
+    // Create warning callout block
     const calloutBlock = {
       object: "block",
       type: "callout",
       callout: {
-        rich_text: [
-          {
-            type: "text",
-            text: {
-              content: warningText
-            }
-          }
-        ],
-        icon: {
-          type: "emoji",
-          emoji: "⚠️"
-        }
+        rich_text: [{ type: "text", text: { content: warningText } }],
+        icon: { type: "emoji", emoji: "⚠️" },
+        color: "orange_background" // Sets the Notion callout to have an orange background
       }
     };
 
-    // Append the callout block and the converted Markdown blocks
+    // Append blocks
     await notion.blocks.children.append({
       block_id: pageId,
       children: [calloutBlock, ...notionBlocks]
