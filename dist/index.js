@@ -47272,7 +47272,7 @@ async function updatePage() {
       page_id: pageId,
       properties: {
         title: { title: [{ text: { content: `${repo} (${branch})` } }] },
-        Description: { rich_text: [{ text: { content: repoDescription } }] }
+        "Description": { rich_text: [{ text: { content: repoDescription } }] }
       }
     });
 
