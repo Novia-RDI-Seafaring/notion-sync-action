@@ -4,6 +4,7 @@
     "description": "GitHub Action to sync README.md to a Notion page",
     "main": "update-notion.js",
     "dependencies": {
+        "@actions/github": "^6.0.0",
         "@notionhq/client": "^2.3.0",
         "@tryfabric/martian": "^1.2.4",
         "dotenv": "^16.4.7"
