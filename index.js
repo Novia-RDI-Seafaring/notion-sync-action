@@ -11,14 +11,6 @@ const { owner, repo } = github.context.repo;
 const branch = github.context.ref.replace('refs/heads/', ''); // Get branch name
 const repoDescription = process.env.INPUT_REPO_DESCRIPTION || 'No description provided';
 
-// Extract latest commit date from GitHub context
-const latestCommitDate = github.context.payload.head_commit?.timestamp
-  ? new Date(github.context.payload.head_commit.timestamp).toISOString()
-  : github.context.payload.repository?.pushed_at
-  ? new Date(github.context.payload.repository.pushed_at).toISOString()
-  : null; // Use null to avoid Notion validation error
-
-
 async function updatePage() {
   try {
     const readmeContent = fs.readFileSync('README.md', 'utf8');
@@ -35,8 +27,7 @@ async function updatePage() {
       page_id: pageId,
       properties: {
         title: { title: [{ text: { content: `${repo} (${branch})` } }] },
-        Description: { rich_text: [{ text: { content: repoDescription } }] },
-        "Latest Commit Date": { date: { start: latestCommitDate } }
+        Description: { rich_text: [{ text: { content: repoDescription } }] }
       }
     });
 
