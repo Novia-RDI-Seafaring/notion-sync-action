@@ -27,3 +27,56 @@ A GitHub Action to sync the `README.md` file of a repository to a specified Noti
      - `NOTION_PAGE_ID`: The ID of the Notion page to update.
 
 ## Usage
+
+Here's an example of how to use this GitHub Action in a workflow:
+
+```yaml
+name: Sync README to Notion
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+
+jobs:
+  sync_readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Sync README to Notion
+        uses: ./  # Path to your action
+        with:
+          notion_token: ${{ secrets.NOTION_TOKEN }}
+          notion_page_id: ${{ secrets.NOTION_PAGE_ID }}
+```
+
+This example demonstrates how to set up a workflow that triggers on pushes to the `main` branch when the `README.md` file is changed. It checks out the code, sets up Node.js, and then runs the action to sync the README to Notion.
+
+
+
+# For Development
+## Managing Dependencies
+
+To manage dependencies without checking in your `node_modules` directory, you can use `@vercel/ncc` to compile your code and modules into a single file for distribution. Therefore, after adjusting the `index.js` it must be recompiled.
+
+1. **Install `@vercel/ncc`**:
+   - Run the following command in your terminal:
+     ```bash
+     npm i -g @vercel/ncc
+     ```
+
+2. **Compile Your Code**:
+   - Compile your `index.js` file using `ncc`:
+     ```bash
+     ncc build index.js --license licenses.txt
+     ```
+   - This will create a `dist/index.js` file with your code and compiled modules, and a `dist/licenses.txt` file with the licenses of the `node_modules` you are using.
