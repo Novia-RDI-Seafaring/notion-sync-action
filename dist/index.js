@@ -5268,28 +5268,32 @@ ${readmeContent}
       }
     });
 
-    await notion.blocks.children.append({
-      block_id: pageId,
-      children: [
-        {
-          object: "block",
-          type: "callout",
-          callout: {
-            rich_text: [
-              {
-                type: "text",
-                text: {
-                  content: contentWithIndication
-                }
-              }
-            ],
-            icon: {
-              type: "emoji",
-              emoji: "ℹ️"
+    // Split content into chunks of 2000 characters
+    const chunks = contentWithIndication.match(/.{1,2000}/gs) || [];
+
+    // Create callout blocks for each chunk
+    const calloutBlocks = chunks.map(chunk => ({
+      object: "block",
+      type: "callout",
+      callout: {
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: chunk
             }
           }
+        ],
+        icon: {
+          type: "emoji",
+          emoji: "ℹ️"
         }
-      ]
+      }
+    }));
+
+    await notion.blocks.children.append({
+      block_id: pageId,
+      children: calloutBlocks
     });
 
     console.log('Successfully updated Notion page');
