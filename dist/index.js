@@ -5271,11 +5271,11 @@ ${readmeContent}
     // Split content into chunks of 2000 characters
     const chunks = contentWithIndication.match(/.{1,2000}/gs) || [];
 
-    // Create callout blocks for each chunk
-    const calloutBlocks = chunks.map(chunk => ({
+    // Create text blocks for each chunk
+    const textBlocks = chunks.map(chunk => ({
       object: "block",
-      type: "callout",
-      callout: {
+      type: "paragraph",
+      paragraph: {
         rich_text: [
           {
             type: "text",
@@ -5283,17 +5283,13 @@ ${readmeContent}
               content: chunk
             }
           }
-        ],
-        icon: {
-          type: "emoji",
-          emoji: "ℹ️"
-        }
+        ]
       }
     }));
 
     await notion.blocks.children.append({
       block_id: pageId,
-      children: calloutBlocks
+      children: textBlocks
     });
 
     console.log('Successfully updated Notion page');
