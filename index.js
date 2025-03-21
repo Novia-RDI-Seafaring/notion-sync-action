@@ -12,9 +12,12 @@ const branch = github.context.ref.replace('refs/heads/', ''); // Get branch name
 const repoDescription = process.env.INPUT_REPO_DESCRIPTION || 'No description provided';
 
 // Extract latest commit date from GitHub context
-const latestCommitDate = github.context.payload.head_commit
-  ? github.context.payload.head_commit.timestamp
-  : 'Unknown date';
+const latestCommitDate = github.context.payload.head_commit?.timestamp
+  ? new Date(github.context.payload.head_commit.timestamp).toISOString()
+  : github.context.payload.repository?.pushed_at
+  ? new Date(github.context.payload.repository.pushed_at).toISOString()
+  : null; // Use null to avoid Notion validation error
+
 
 async function updatePage() {
   try {
