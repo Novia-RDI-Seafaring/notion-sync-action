@@ -19,5 +19,7 @@ runs:
         node-version: '20'
     - name: Install dependencies
       run: npm install
+      shell: bash
     - name: Run main script
       run: node update-notion.js
+      shell: bash
