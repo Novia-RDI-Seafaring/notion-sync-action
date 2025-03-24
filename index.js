@@ -13,7 +13,11 @@ const repoDescription = process.env.INPUT_REPO_DESCRIPTION || 'No description pr
 
 async function updatePage() {
   try {
-    const readmeContent = fs.readFileSync('README.md', 'utf8');
+    let readmeContent = fs.readFileSync('README.md', 'utf8');
+
+    // Remove within-document links (e.g., [Installation](#installation))
+    readmeContent = readmeContent.replace(/\[([^\]]+)\]\(#\w+\)/g, '$1');
+    
     const warningText = "This page's content is automatically copied from the connected GitHub repository.";
 
     // Clear existing blocks
