@@ -47279,22 +47279,27 @@ async function updatePage() {
     // Convert Markdown to Notion blocks
     const notionBlocks = markdownToBlocks(readmeContent);
 
-    // Create warning callout block
-    const calloutBlock = {
-      object: "block",
-      type: "callout",
-      callout: {
-        rich_text: [{ type: "text", text: { content: warningText } }],
-        icon: { type: "emoji", emoji: "⚠️" },
-        color: "orange_background" // Sets the Notion callout to have an orange background
-      }
-    };
+    // Append the callout block
+    try {
+      await notion.blocks.children.append({
+        block_id: pageId,
+        children: [calloutBlock]
+      });
+    } catch (error) {
+      console.error('Error appending callout block:', error);
+    }
 
-    // Append blocks
-    await notion.blocks.children.append({
-      block_id: pageId,
-      children: [calloutBlock, ...notionBlocks]
-    });
+    // Append the converted Markdown blocks
+    for (const block of notionBlocks) {
+      try {
+        await notion.blocks.children.append({
+          block_id: pageId,
+          children: [block]
+        });
+      } catch (error) {
+        console.error('Error appending block:', error);
+      }
+    }
 
     console.log('Successfully updated Notion page');
   } catch (error) {
