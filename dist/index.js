@@ -47260,10 +47260,7 @@ async function updatePage() {
   try {
     let readmeContent = fs.readFileSync('README.md', 'utf8');
 
-    // Remove within-document links (e.g., [Installation](#installation))
-    console.log('Before replacement:', readmeContent);
     readmeContent = readmeContent.replace(/\[([^\]]+)\]\(#([^\)]+)\)/g, '$1');
-    console.log('After replacement:', readmeContent);
 
     const warningText = "This page's content is automatically copied from the connected GitHub repository.";
 
