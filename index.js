@@ -16,8 +16,10 @@ async function updatePage() {
     let readmeContent = fs.readFileSync('README.md', 'utf8');
 
     // Remove within-document links (e.g., [Installation](#installation))
-    readmeContent = readmeContent.replace(/\[([^\]]+)\]\(#\w+\)/g, '$1');
-    
+    console.log('Before replacement:', readmeContent);
+    readmeContent = readmeContent.replace(/\[([^\]]+)\]\(#([^\)]+)\)/g, '$1');
+    console.log('After replacement:', readmeContent);
+
     const warningText = "This page's content is automatically copied from the connected GitHub repository.";
 
     // Clear existing blocks
@@ -54,7 +56,8 @@ async function updatePage() {
         icon: {
           type: "emoji",
           emoji: "⚠️"
-        }
+        },
+        color: "orange_background"
       }
     };
 
