@@ -34,6 +34,26 @@ async function updatePage() {
     // Convert Markdown to Notion blocks
     const notionBlocks = markdownToBlocks(readmeContent);
 
+    // Prepend the warning callout block
+    const calloutBlock = {
+      object: "block",
+      type: "callout",
+      callout: {
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: warningText
+            }
+          }
+        ],
+        icon: {
+          type: "emoji",
+          emoji: "⚠️"
+        }
+      }
+    };
+
     // Append the callout block
     try {
       await notion.blocks.children.append({
