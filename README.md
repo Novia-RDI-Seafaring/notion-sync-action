@@ -43,20 +43,17 @@ on:
 jobs:
   sync_readme:
     runs-on: ubuntu-latest
+    name: Sync README to Notion
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+        uses: actions/checkout@v4
 
       - name: Sync README to Notion
-        uses: ./  # Path to your action
+        uses: Novia-RDI-Seafaring/notion-sync-action@main
         with:
           notion_token: ${{ secrets.NOTION_TOKEN }}
           notion_page_id: ${{ secrets.NOTION_PAGE_ID }}
+          repo_description: <Short description of the REPO>
 ```
 
 This example demonstrates how to set up a workflow that triggers on pushes to the `main` branch when the `README.md` file is changed. It checks out the code, sets up Node.js, and then runs the action to sync the README to Notion.
