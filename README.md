@@ -34,6 +34,7 @@ Here's an example of how to use this GitHub Action in a workflow:
 name: Sync README to Notion
 
 on:
+  workflow_dispatch: # Allows manual triggering of the workflow
   push:
     branches:
       - main
